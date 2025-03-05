@@ -174,40 +174,120 @@
         </footer>
     </div>
 
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Use static data instead of API fetch
-            const staticData = {"spotify":1350186,"youtube":1420000,"total":2770186,"lastUpdated":"2025-03-05T17:06:38.343Z"};
+            const totalCount = document.getElementById('total-count');
+            const spotifyCount = document.getElementById('spotify-count');
+            const youtubeCount = document.getElementById('youtube-count');
+            const refreshBtn = document.getElementById('refresh-btn');
+            const lastUpdate = document.getElementById('last-update');
+            const progressFill = document.getElementById('progress-fill');
+            const milestoneText = document.getElementById('milestone-text');
+            const milestonePercentage = document.getElementById('milestone-percentage');
 
-            // Format numbers with thousand separators
-            const spotifyFormatted = new Intl.NumberFormat().format(staticData.spotify);
-            const youtubeFormatted = new Intl.NumberFormat().format(staticData.youtube);
-            const totalFormatted = new Intl.NumberFormat().format(staticData.total);
+            const MILESTONE_TARGET = 15000000; // 15 million streams
 
-            // Update UI with counts
-            document.getElementById('spotify-count').textContent = spotifyFormatted;
-            document.getElementById('youtube-count').textContent = youtubeFormatted;
-            document.getElementById('total-count').textContent = totalFormatted;
+            const GOLD_TARGET = 15000000;
+            const PLATINUM_TARGET = 30000000;
 
-            // Update milestone progress
-            updateMilestoneProgress(staticData.total);
+            fetchCounts();
 
-            // Update last refreshed time
-            document.getElementById('last-update').textContent = new Date(staticData.lastUpdated).toLocaleString('fr-FR');
-            document.getElementById('static-notice').style.display = 'block';
+            // Set up refresh button
+            refreshBtn.addEventListener('click', function() {
+                refreshBtn.classList.add('spinning');
+                fetchCounts();
+            });
 
-            // Rest of your existing code
+            function fetchCounts() {
+                // Update UI to show loading
+                spotifyCount.textContent = 'Loading...';
+                youtubeCount.textContent = 'Loading...';
+                totalCount.textContent = 'Loading...';
+
+                // Fetch counts from our backend
+                fetch('/api/counts')
+                    .then(response => response.json())
+                    .then(data => {
+                        // Format numbers with thousand separators
+                        const spotifyFormatted = new Intl.NumberFormat().format(data.spotify);
+                        const youtubeFormatted = new Intl.NumberFormat().format(data.youtube);
+                        const totalFormatted = new Intl.NumberFormat().format(data.total);
+
+                        // Update UI with counts
+                        spotifyCount.textContent = spotifyFormatted;
+                        youtubeCount.textContent = youtubeFormatted;
+                        totalCount.textContent = totalFormatted;
+
+                        // Update milestone progress
+                        updateMilestoneProgress(data.total);
+
+                        // Update last refreshed time
+                        lastUpdate.textContent = new Date().toLocaleString('fr-FR');
+
+                        // Remove spinning class from refresh button
+                        setTimeout(() => {
+                            refreshBtn.classList.remove('spinning');
+                        }, 600);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching counts:', error);
+                        spotifyCount.textContent = 'Error';
+                        youtubeCount.textContent = 'Error';
+                        totalCount.textContent = 'Error';
+                        refreshBtn.classList.remove('spinning');
+                    });
+            }
+
             function updateMilestoneProgress(total) {
-                // Your existing milestone code
-                // ...
+                // Original milestone progress update
+                const percentage = Math.min(100, (total / MILESTONE_TARGET) * 100);
+                const formattedPercentage = percentage.toFixed(1);
+
+                // Update progress bar width with animation
+                progressFill.style.width = `${percentage}%`;
+                milestonePercentage.textContent = `${formattedPercentage}%`;
+
+                // Update milestone text
+                const remaining = MILESTONE_TARGET - total;
+                if (remaining <= 0) {
+                    milestoneText.textContent = `Objectif atteint ! ${new Intl.NumberFormat('fr-FR').format(total)} streams au total`;
+                } else {
+                    milestoneText.textContent = `${new Intl.NumberFormat('fr-FR').format(remaining)} streams nécessaires pour atteindre l'objectif`;
+                }
+
+                // Update certification milestones
+                updateCertificationProgress(total);
             }
 
+            // Update certification progress bars and counts - updated to remove diamond
             function updateCertificationProgress(total) {
-                // Your existing certification code
-                // ...
+                // Format the current count for display
+                const formattedTotal = new Intl.NumberFormat('fr-FR').format(total);
+
+                // Update Gold record progress
+                const goldPercentage = Math.min(100, (total / GOLD_TARGET) * 100);
+                document.getElementById('gold-progress').style.width = `${goldPercentage}%`;
+                document.getElementById('current-count-gold').textContent = formattedTotal;
+
+                // Update Platinum record progress
+                const platinumPercentage = Math.min(100, (total / PLATINUM_TARGET) * 100);
+                document.getElementById('platinum-progress').style.width = `${platinumPercentage}%`;
+                document.getElementById('current-count-platinum').textContent = formattedTotal;
+
+                // Add visual indicator if milestone reached
+                if (total >= GOLD_TARGET) {
+                    document.querySelector('.cert-milestone.gold').classList.add('achieved');
+                }
+                if (total >= PLATINUM_TARGET) {
+                    document.querySelector('.cert-milestone.platinum').classList.add('achieved');
+                }
             }
+
+            // Auto-refresh every 5 minutes
+            setInterval(fetchCounts, 2 * 60 * 1000);
         });
     </script>
 </body>
 </html>
+
