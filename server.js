@@ -3,7 +3,7 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const path = require('path');
 const { getSpotifyPlayCount } = require('./spotify-api-official');
-const { getYouTubeViewCount, extractVideoId } = require('./youtube-api');
+const { getYouTubeViewCount, forceRefreshYouTubeCount, extractVideoId } = require('./youtube-api');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -29,18 +29,36 @@ app.get('/api/counts', async (req, res) => {
         console.log('Counts:', {
             spotify: spotifyCount,
             youtube: youtubeCount,
-            total: totalCount
+            total: totalCount,
+            timestamp: new Date().toISOString()
         });
 
         // Return counts as JSON
         res.json({
             spotify: spotifyCount,
             youtube: youtubeCount,
-            total: totalCount
+            total: totalCount,
+            lastUpdated: new Date().toISOString()
         });
     } catch (error) {
         console.error('Error fetching counts:', error);
         res.status(500).json({ error: 'Failed to fetch counts' });
+    }
+});
+
+// API endpoint to force refresh the YouTube count
+app.get('/api/refresh/youtube', async (req, res) => {
+    try {
+        console.log('Force refreshing YouTube count...');
+        const youtubeCount = await forceRefreshYouTubeCount(YOUTUBE_VIDEO_ID);
+        res.json({
+            youtube: youtubeCount,
+            message: 'YouTube count refreshed successfully',
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        console.error('Error refreshing YouTube count:', error);
+        res.status(500).json({ error: 'Failed to refresh YouTube count' });
     }
 });
 

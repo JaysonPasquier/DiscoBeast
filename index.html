@@ -191,12 +191,27 @@
             const GOLD_TARGET = 15000000;
             const PLATINUM_TARGET = 30000000;
 
+            // Track the last YouTube count for comparison
+            let lastYoutubeCount = 0;
+
             fetchCounts();
 
             // Set up refresh button
             refreshBtn.addEventListener('click', function() {
                 refreshBtn.classList.add('spinning');
-                fetchCounts();
+
+                // Force refresh the YouTube count
+                fetch('/api/refresh/youtube')
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('YouTube count refreshed:', data.youtube);
+                        // After refreshing YouTube, get all counts
+                        fetchCounts();
+                    })
+                    .catch(error => {
+                        console.error('Error refreshing YouTube count:', error);
+                        fetchCounts(); // Still try to fetch all counts
+                    });
             });
 
             function fetchCounts() {
@@ -209,6 +224,10 @@
                 fetch('/api/counts')
                     .then(response => response.json())
                     .then(data => {
+                        // Check if YouTube count changed
+                        const youtubeChanged = data.youtube !== lastYoutubeCount;
+                        lastYoutubeCount = data.youtube;
+
                         // Format numbers with thousand separators
                         const spotifyFormatted = new Intl.NumberFormat().format(data.spotify);
                         const youtubeFormatted = new Intl.NumberFormat().format(data.youtube);
@@ -216,7 +235,16 @@
 
                         // Update UI with counts
                         spotifyCount.textContent = spotifyFormatted;
+
+                        // Highlight YouTube count if it changed
                         youtubeCount.textContent = youtubeFormatted;
+                        if (youtubeChanged) {
+                            youtubeCount.classList.add('count-updated');
+                            setTimeout(() => {
+                                youtubeCount.classList.remove('count-updated');
+                            }, 2000);
+                        }
+
                         totalCount.textContent = totalFormatted;
 
                         // Update milestone progress
@@ -288,6 +316,19 @@
             setInterval(fetchCounts, 2 * 60 * 1000);
         });
     </script>
+
+    <!-- Add this CSS to highlight count changes -->
+    <style>
+        @keyframes countUpdated {
+            0% { background-color: transparent; }
+            50% { background-color: rgba(255, 0, 0, 0.3); }
+            100% { background-color: transparent; }
+        }
+
+        .count-updated {
+            animation: countUpdated 2s ease-in-out;
+        }
+    </style>
 </body>
 </html>
 
