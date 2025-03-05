@@ -99,9 +99,6 @@ async function createStaticHtml() {
     // Replace the script section
     html = html.replace(/<script>[\s\S]*?<\/script>/, scriptReplacement);
 
-    // Add a static notice
-    html = html.replace('</header>', '</header><div id="static-notice" style="display:none;background-color:#ffcc00;color:#000;padding:8px;margin-bottom:20px;border-radius:5px;text-align:center;">Static Demo - Updated on ' + new Date().toLocaleDateString() + '</div>');
-
     // Write the static HTML file
     fs.writeFileSync(path.join(__dirname, 'index.html'), html);
     console.log('Static HTML version created');
