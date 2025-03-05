@@ -3,6 +3,7 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const path = require('path');
 const { getSpotifyPlayCount } = require('./spotify-api-official');
+const { getYouTubeViewCount, extractVideoId } = require('./youtube-api');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -10,6 +11,9 @@ const PORT = process.env.PORT || 3000;
 // Track URLs for verified platforms
 const SPOTIFY_TRACK_URL = 'https://open.spotify.com/intl-fr/track/0QSFpVVi5h1TrYG69WMTg7';
 const YOUTUBE_VIDEO_URL = 'https://www.youtube.com/watch?v=Mo2HToQ3-S4';
+
+// Extract YouTube video ID
+const YOUTUBE_VIDEO_ID = extractVideoId(YOUTUBE_VIDEO_URL);
 
 // Serve static files
 app.use(express.static(path.join(__dirname)));
@@ -53,30 +57,7 @@ async function getSpotifyCount() {
 // Function to get YouTube view count
 async function getYoutubeCount() {
     try {
-        const response = await axios.get(YOUTUBE_VIDEO_URL, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-            }
-        });
-
-        const $ = cheerio.load(response.data);
-
-        // YouTube view count is harder to extract as it's in a script tag
-        const scriptTags = $('script').toArray();
-        let viewCount = 0;
-
-        for (const script of scriptTags) {
-            const content = $(script).html();
-            if (content && content.includes('"viewCount"')) {
-                const match = content.match(/"viewCount":\s*"(\d+)"/);
-                if (match && match[1]) {
-                    viewCount = parseInt(match[1]);
-                    break;
-                }
-            }
-        }
-
-        return viewCount;
+        return await getYouTubeViewCount(YOUTUBE_VIDEO_ID);
     } catch (error) {
         console.error('Error fetching YouTube count:', error);
         return 0;
