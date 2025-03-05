@@ -1,0 +1,185 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #121212;
+    color: #ffffff;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(45deg, #1DB954, #FF0000);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+.counter-container {
+    width: 100%;
+    margin-bottom: 3rem;
+}
+
+.counter-box {
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.counter-box:hover {
+    transform: translateY(-5px);
+}
+
+.counter-box h2 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.counter-box.total {
+    background: linear-gradient(45deg, #1e1e1e, #2e2e2e);
+    border-left: 5px solid #1DB954;
+}
+
+.count {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.platform-counts {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.platform-counts .counter-box {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.counter-box img {
+    height: 40px;
+    margin-bottom: 1rem;
+    object-fit: contain;
+}
+
+.counter-box.spotify {
+    border-left: 5px solid #1DB954;
+}
+
+.counter-box.youtube {
+    border-left: 5px solid #FF0000;
+}
+
+.links-container {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+}
+
+.platform-link {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    min-width: 180px;
+    text-align: center;
+}
+
+.spotify-link {
+    background-color: #1DB954;
+    color: #000000;
+}
+
+.youtube-link {
+    background-color: #FF0000;
+    color: #ffffff;
+}
+
+.platform-link:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .container {
+        padding: 1.5rem;
+    }
+
+    h1 {
+        font-size: 2.2rem;
+    }
+
+    .platform-counts {
+        flex-direction: column;
+    }
+
+    .count {
+        font-size: 2rem;
+    }
+
+    .links-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .platform-link {
+        width: 100%;
+        max-width: 280px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+
+    .counter-box {
+        padding: 1rem;
+    }
+
+    .count {
+        font-size: 1.5rem;
+    }
+}
