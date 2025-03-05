@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiscoBeast - Charity Stream Counter</title>
+    <link rel="stylesheet" href="style-modern.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-pattern"></div>
+
+    <div class="container">
+        <header>
+            <h1 class="title">DISCO<span>BEAST</span></h1>
+        </header>
+
+        <div class="main-content">
+            <div class="album-section">
+                <div class="album-art-container">
+                    <img src="DiscoBeast.jpg" alt="DiscoBeast Album Cover" class="album-art">
+                </div>
+
+                <div class="album-info">
+                    <h2>DiscoBeast</h2>
+                    <p class="artist">JOYCA × MrBeast</p>
+
+                    <!-- New promo section -->
+                    <div class="promo-section">
+                        <div class="promo-item vinyl">
+                            <i class="fas fa-record-vinyl"></i>
+                            <p>👉​💽​ Choppez votre vinyle ici (précommande) : <a href="https://joyca.shop/" target="_blank" class="promo-link">joyca.shop</a></p>
+                        </div>
+
+                        <div class="promo-item all-platforms">
+                            <i class="fas fa-music"></i>
+                            <p>👉 ECOUTEZ DISCOBEAST SUR TOUTES LES PLATEFORMES !</p>
+                            <p class="disco-text">🪩🕺 <a href="https://linktr.ee/joyca_discobeast" target="_blank" class="promo-link">linktr.ee/joyca_discobeast</a> 🪩🕺</p>
+                        </div>
+                    </div>
+
+                    <div class="links">
+                        <a href="https://linktr.ee/joyca_discobeast" target="_blank" class="platform-link linktree">
+                            <i class="fas fa-link"></i> Linktree
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=Mo2HToQ3-S4" target="_blank" class="platform-link youtube">
+                            <i class="fab fa-youtube"></i> YouTube
+                        </a>
+                        <a href="https://open.spotify.com/intl-fr/track/0QSFpVVi5h1TrYG69WMTg7" target="_blank" class="platform-link spotify">
+                            <i class="fab fa-spotify"></i> Spotify
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="counter-section">
+                <div class="total-counter">
+                    <div class="counter-label">Total Streams</div>
+                    <div id="total-count" class="count">Loading...</div>
+                </div>
+
+                <div class="platforms-container">
+                    <div class="platform-counter spotify">
+                        <div class="platform-icon">
+                            <i class="fab fa-spotify"></i>
+                        </div>
+                        <div class="platform-name">Spotify</div>
+                        <div id="spotify-count" class="count">Loading...</div>
+                    </div>
+
+                    <div class="platform-counter youtube">
+                        <div class="platform-icon">
+                            <i class="fab fa-youtube"></i>
+                        </div>
+                        <div class="platform-name">YouTube</div>
+                        <div id="youtube-count" class="count">Loading...</div>
+                    </div>
+                </div>
+
+                <button id="refresh-btn" class="refresh-button">
+                    <i class="fas fa-sync-alt"></i> Refresh Counts
+                </button>
+            </div>
+
+            <div class="charity-section">
+                <div class="unicef-message">
+                    <i class="fas fa-heart charity-icon"></i>
+                    <p>💙​ Tous les revenus générés par les streams du son sur les plateformes seront reversés à l'UNICEF !
+                    <br>Chaque stream = un don, plus d'infos ici :
+                    <a href="https://www.unicef.fr" target="_blank">unicef.fr</a></p>
+                </div>
+
+                <!-- Replace certification milestones section with accurate values -->
+                <div class="milestones-section">
+                    <h3>Objectifs de Certification</h3>
+
+                    <!-- Current milestone tracker -->
+                    <div class="progress-container">
+                        <div class="milestone-info">
+                            <span>Premier Objectif: <strong>3,000,000</strong> streams</span>
+                            <span id="milestone-percentage">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div id="progress-fill" class="progress-fill"></div>
+                        </div>
+                        <div id="milestone-text" class="milestone-text">Loading progress...</div>
+                    </div>
+
+                    <!-- Certification milestones - updated with correct values -->
+                    <div class="certification-milestones">
+                        <div class="cert-milestone gold">
+                            <div class="cert-icon">
+                                <i class="fas fa-award"></i>
+                            </div>
+                            <div class="cert-info">
+                                <h4>Disque d'Or</h4>
+                                <div class="cert-progress">
+                                    <div class="cert-bar">
+                                        <div id="gold-progress" class="cert-fill gold-fill"></div>
+                                    </div>
+                                    <div class="cert-numbers">
+                                        <span id="current-count-gold">0</span> / <span class="cert-target">15,000,000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cert-milestone platinum">
+                            <div class="cert-icon">
+                                <i class="fas fa-compact-disc"></i>
+                            </div>
+                            <div class="cert-info"></div>
+                                <h4>Disque de Platine</h4>
+                                <div class="cert-progress">
+                                    <div class="cert-bar">
+                                        <div id="platinum-progress" class="cert-fill platinum-fill"></div>
+                                    </div>
+                                    <div class="cert-numbers">
+                                        <span id="current-count-platinum">0</span> / <span class="cert-target">30,000,000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+			<div class="video-announcement-section">
+                <div class="video-container">
+                    <iframe
+                        width="560"
+                        height="315"
+                        src="https://www.youtube.com/embed/yW8SqDwk0Sg"
+                        title="JOYCA annonce du projet DiscoBeast"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+            <div class="credits-section">
+                <h3>Crédits</h3>
+                <p>Mix: <strong>Marti.mix</strong></p>
+                <p>Mastering: <strong>Adil de Saint Denis @ DSD SOUND</strong></p>
+            </div>
+        </div>
+
+        <footer>
+            <div class="footer-info">
+                <p>Last updated: <span id="last-update">Loading...</span></p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const totalCount = document.getElementById('total-count');
+            const spotifyCount = document.getElementById('spotify-count');
+            const youtubeCount = document.getElementById('youtube-count');
+            const refreshBtn = document.getElementById('refresh-btn');
+            const lastUpdate = document.getElementById('last-update');
+            const progressFill = document.getElementById('progress-fill');
+            const milestoneText = document.getElementById('milestone-text');
+            const milestonePercentage = document.getElementById('milestone-percentage');
+
+            const MILESTONE_TARGET = 15000000; // 15 million streams
+
+            const GOLD_TARGET = 15000000;
+            const PLATINUM_TARGET = 30000000;
+
+            fetchCounts();
+
+            // Set up refresh button
+            refreshBtn.addEventListener('click', function() {
+                refreshBtn.classList.add('spinning');
+                fetchCounts();
+            });
+
+            function fetchCounts() {
+                // Update UI to show loading
+                spotifyCount.textContent = 'Loading...';
+                youtubeCount.textContent = 'Loading...';
+                totalCount.textContent = 'Loading...';
+
+                // Fetch counts from our backend
+                fetch('/api/counts')
+                    .then(response => response.json())
+                    .then(data => {
+                        // Format numbers with thousand separators
+                        const spotifyFormatted = new Intl.NumberFormat().format(data.spotify);
+                        const youtubeFormatted = new Intl.NumberFormat().format(data.youtube);
+                        const totalFormatted = new Intl.NumberFormat().format(data.total);
+
+                        // Update UI with counts
+                        spotifyCount.textContent = spotifyFormatted;
+                        youtubeCount.textContent = youtubeFormatted;
+                        totalCount.textContent = totalFormatted;
+
+                        // Update milestone progress
+                        updateMilestoneProgress(data.total);
+
+                        // Update last refreshed time
+                        lastUpdate.textContent = new Date().toLocaleString('fr-FR');
+
+                        // Remove spinning class from refresh button
+                        setTimeout(() => {
+                            refreshBtn.classList.remove('spinning');
+                        }, 600);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching counts:', error);
+                        spotifyCount.textContent = 'Error';
+                        youtubeCount.textContent = 'Error';
+                        totalCount.textContent = 'Error';
+                        refreshBtn.classList.remove('spinning');
+                    });
+            }
+
+            function updateMilestoneProgress(total) {
+                // Original milestone progress update
+                const percentage = Math.min(100, (total / MILESTONE_TARGET) * 100);
+                const formattedPercentage = percentage.toFixed(1);
+
+                // Update progress bar width with animation
+                progressFill.style.width = `${percentage}%`;
+                milestonePercentage.textContent = `${formattedPercentage}%`;
+
+                // Update milestone text
+                const remaining = MILESTONE_TARGET - total;
+                if (remaining <= 0) {
+                    milestoneText.textContent = `Objectif atteint ! ${new Intl.NumberFormat('fr-FR').format(total)} streams au total`;
+                } else {
+                    milestoneText.textContent = `${new Intl.NumberFormat('fr-FR').format(remaining)} streams nécessaires pour atteindre l'objectif`;
+                }
+
+                // Update certification milestones
+                updateCertificationProgress(total);
+            }
+
+            // Update certification progress bars and counts - updated to remove diamond
+            function updateCertificationProgress(total) {
+                // Format the current count for display
+                const formattedTotal = new Intl.NumberFormat('fr-FR').format(total);
+
+                // Update Gold record progress
+                const goldPercentage = Math.min(100, (total / GOLD_TARGET) * 100);
+                document.getElementById('gold-progress').style.width = `${goldPercentage}%`;
+                document.getElementById('current-count-gold').textContent = formattedTotal;
+
+                // Update Platinum record progress
+                const platinumPercentage = Math.min(100, (total / PLATINUM_TARGET) * 100);
+                document.getElementById('platinum-progress').style.width = `${platinumPercentage}%`;
+                document.getElementById('current-count-platinum').textContent = formattedTotal;
+
+                // Add visual indicator if milestone reached
+                if (total >= GOLD_TARGET) {
+                    document.querySelector('.cert-milestone.gold').classList.add('achieved');
+                }
+                if (total >= PLATINUM_TARGET) {
+                    document.querySelector('.cert-milestone.platinum').classList.add('achieved');
+                }
+            }
+
+            // Auto-refresh every 5 minutes
+            setInterval(fetchCounts, 2 * 60 * 1000);
+        });
+    </script>
+</body>
+</html>

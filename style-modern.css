@@ -1,0 +1,983 @@
+:root {
+    --primary-color: #ff6b00;  /* Orange */
+    --primary-light: #ff9d4d;  /* Light Orange */
+    --primary-dark: #cc5600;   /* Dark Orange */
+    --secondary-color: #1a1a1a; /* Almost Black */
+    --text-color: #fff;
+    --text-secondary: #d1d1d1;
+    --accent-color: #ff9d00;   /* Golden Orange */
+    --background: #121212;     /* Dark background */
+    --card-bg: #222222;        /* Card background */
+    --spotify-color: #1DB954;  /* Spotify Green */
+    --youtube-color: #FF0000;  /* YouTube Red */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background);
+    color: var(--text-color);
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.background-pattern {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        linear-gradient(to right, rgba(255, 107, 0, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 107, 0, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+    z-index: -1;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+/* Header Styles */
+header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.title span {
+    color: var(--text-color);
+    -webkit-text-fill-color: var(--text-color);
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+}
+
+/* Main Content */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Album Section */
+.album-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.album-art-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    perspective: 1000px; /* For 3D effect */
+}
+
+.album-art-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.album-art-placeholder::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(0, 0, 0, 0.1),
+        rgba(0, 0, 0, 0.1) 10px,
+        rgba(0, 0, 0, 0.2) 10px,
+        rgba(0, 0, 0, 0.2) 20px
+    );
+}
+
+.placeholder-text {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.8);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+.album-spinner {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--secondary-color);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.1);
+}
+
+.album-spinner::after {
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.album-info {
+    flex: 1;
+    min-width: 250px;
+    padding: 1rem;
+}
+
+.album-art {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%; /* Make it circular like a vinyl */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    animation: spin 20s linear infinite; /* Slower spin for vinyl effect */
+    transform-origin: center center;
+}
+
+/* Add a record label in the middle */
+.album-art-container::after {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-color: var(--secondary-color);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+}
+
+/* Hole in the middle of the record */
+.album-art-container::before {
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    pointer-events: none;
+}
+
+.album-info h2 {
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(to right, #fff, #ccc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.album-info .artist {
+    font-size: 1.3rem;
+    color: var(--primary-light);
+    margin-bottom: 1rem;
+}
+
+/* New Promotional Section */
+.promo-section {
+    background-color: rgba(255, 107, 0, 0.1);
+    border-radius: 10px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid var(--primary-color);
+}
+
+.promo-item {
+    margin-bottom: 1rem;
+    position: relative;
+    padding-left: 0.5rem;
+}
+
+.promo-item:last-child {
+    margin-bottom: 0;
+}
+
+.promo-item p {
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+}
+
+.promo-item p:last-child {
+    margin-bottom: 0;
+}
+
+.promo-link {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border-bottom: 1px dashed var(--primary-color);
+}
+
+.promo-link:hover {
+    color: var(--primary-light);
+    border-bottom: 1px solid var(--primary-light);
+}
+
+.vinyl i {
+    margin-right: 0.5rem;
+    color: var(--primary-light);
+}
+
+.all-platforms {
+    margin-top: 0.8rem;
+    padding-top: 0.8rem;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.disco-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-top: 0.5rem;
+}
+
+/* Disco ball animation for extra flair */
+@keyframes discoSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.promo-section i.fa-music {
+    animation: discoSpin 3s infinite linear;
+    display: inline-block;
+    color: var(--primary-light);
+    margin-right: 0.5rem;
+}
+
+/* Counter Section */
+.counter-section {
+    background-color: var(--card-bg);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    margin-bottom: 2rem;
+}
+
+.total-counter {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.total-counter::before {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+    top: -100px;
+    left: -100px;
+    border-radius: 50%;
+}
+
+.counter-label {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.count {
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.platforms-container {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.platform-counter {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1.8rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 250px; /* Fixed width for consistency */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.platform-counter:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.platform-counter.spotify {
+    border-left: 4px solid var(--spotify-color);
+}
+
+.platform-counter.youtube {
+    border-left: 4px solid var(--youtube-color);
+}
+
+.platform-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.platform-counter.spotify .platform-icon {
+    color: var(--spotify-color);
+}
+
+.platform-counter.youtube .platform-icon {
+    color: var(--youtube-color);
+}
+
+.platform-name {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.platform-counter .count {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.refresh-button {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.refresh-button:hover {
+    background-color: var(--primary-dark);
+}
+
+.refresh-button i {
+    margin-right: 0.5rem;
+    transition: transform 0.5s ease;
+}
+
+.refresh-button.spinning i {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Charity Section */
+.charity-section {
+    background-color: var(--card-bg);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.unicef-message {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+    background-color: rgba(0, 114, 206, 0.1); /* UNICEF Blue */
+    border-radius: 10px;
+    margin-bottom: 2rem;
+}
+
+.charity-icon {
+    font-size: 1.5rem;
+    color: #0072ce; /* UNICEF Blue */
+    margin-right: 1rem;
+}
+
+.unicef-message p {
+    line-height: 1.6;
+}
+
+.unicef-message a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.unicef-message a:hover {
+    color: var(--primary-light);
+    text-decoration: underline;
+}
+
+.progress-container {
+    margin-top: 1.5rem;
+}
+
+.milestone-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+.progress-bar {
+    height: 12px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+    width: 0%;
+    transition: width 1s ease-in-out;
+    border-radius: 10px;
+    position: relative;
+}
+
+.milestone-text {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* New Certification Milestones Styles */
+.milestones-section {
+    margin-top: 2rem;
+}
+
+.milestones-section h3 {
+    color: var(--primary-light);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+/* Updated certification milestones styling */
+.certification-milestones {
+    margin-top: 3rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.cert-milestone {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.03);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.cert-milestone::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    opacity: 0.7;
+}
+
+.cert-milestone.gold::before {
+    background-color: #FFD700; /* Gold */
+}
+
+.cert-milestone.platinum::before {
+    background-color: #E5E4E2; /* Platinum */
+}
+
+.cert-milestone.diamond::before {
+    background-color: #B9F2FF; /* Diamond */
+}
+
+/* Increase size for better visibility with just two milestones */
+.cert-icon {
+    font-size: 2.2rem;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.cert-milestone.gold .cert-icon {
+    color: #FFD700;
+    background-color: rgba(255, 215, 0, 0.1);
+}
+
+.cert-milestone.platinum .cert-icon {
+    color: #E5E4E2;
+    background-color: rgba(229, 228, 226, 0.1);
+}
+
+.cert-milestone.diamond .cert-icon {
+    color: #B9F2FF;
+    background-color: rgba(185, 242, 255, 0.1);
+}
+
+.cert-info {
+    flex: 1;
+}
+
+.cert-info h4 {
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.cert-milestone.gold h4 {
+    color: #FFD700;
+}
+
+.cert-milestone.platinum h4 {
+    color: #E5E4E2;
+}
+
+.cert-milestone.diamond h4 {
+    color: #B9F2FF;
+}
+
+.cert-progress {
+    width: 100%;
+}
+
+/* Make progress bars taller for better visibility */
+.cert-bar {
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.cert-fill {
+    height: 100%;
+    width: 0%; /* Will be updated by JavaScript */
+    border-radius: 4px;
+    transition: width 1.5s ease;
+}
+
+.gold-fill {
+    background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728);
+}
+
+.platinum-fill {
+    background: linear-gradient(to right, #8E8E8E, #E5E4E2, #C0C0C0);
+}
+
+.diamond-fill {
+    background: linear-gradient(to right, #83B9FF, #B9F2FF, #42A1FF);
+}
+
+.cert-numbers {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.cert-target {
+    opacity: 0.7;
+}
+
+/* Milestone achieved state */
+.cert-milestone.achieved {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+    transform: translateY(-3px);
+}
+
+.cert-milestone.achieved::after {
+    content: '✓';
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.cert-milestone.gold.achieved::after {
+    color: #FFD700;
+}
+
+.cert-milestone.platinum.achieved::after {
+    color: #E5E4E2;
+}
+
+.cert-milestone.diamond.achieved::after {
+    color: #B9F2FF;
+}
+
+/* Responsive design for certification milestones */
+@media (max-width: 768px) {
+    .cert-milestone {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.8rem;
+        padding: 1.5rem 1rem;
+    }
+
+    .cert-milestone::before {
+        width: 100%;
+        height: 4px;
+        top: 0;
+        left: 0;
+    }
+
+    .cert-icon {
+        margin: 0 auto;
+    }
+}
+
+/* New Video Announcement Section */
+.video-announcement-section {
+    background-color: var(--card-bg);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.video-announcement-section h3 {
+    color: var(--primary-light);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    height: 0;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 10px;
+}
+
+/* Add subtle glow effect on hover */
+.video-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: inset 0 0 20px rgba(255, 107, 0, 0.3);
+    border-radius: 10px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.video-container:hover::after {
+    opacity: 1;
+}
+
+/* Responsive adjustments for the video section */
+@media (max-width: 768px) {
+    .video-announcement-section {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .video-announcement-section h3 {
+        font-size: 1.2rem;
+    }
+}
+
+/* Credits Section */
+.credits-section {
+    background-color: var(--card-bg);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.credits-section h3 {
+    color: var(--primary-light);
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.credits-section p {
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.credits-section strong {
+    color: var(--text-color);
+}
+
+/* Footer */
+footer {
+    margin-top: 3rem;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+#last-update {
+    font-weight: 500;
+    color: var(--primary-light);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .title {
+        font-size: 2.5rem;
+    }
+
+    .album-art-container {
+        width: 250px;
+        height: 250px;
+    }
+
+    .count {
+        font-size: 2.2rem;
+    }
+
+    .platforms-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .platform-counter {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .promo-section {
+        padding: 1rem;
+    }
+
+    .disco-text {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .title {
+        font-size: 2rem;
+    }
+
+    .album-art-container {
+        width: 200px;
+        height: 200px;
+    }
+
+    .count {
+        font-size: 1.8rem;
+    }
+
+    .platform-counter {
+        padding: 1rem;
+    }
+
+    .unicef-message {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .charity-icon {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Enhancing Platform Link Button Styling */
+.links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    justify-content: center;
+}
+
+.platform-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8rem 1.5rem;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    min-width: 130px;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid transparent;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+}
+
+.platform-link i {
+    margin-right: 0.6rem;
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+/* Add subtle glow effect on hover */
+.platform-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.7s ease;
+}
+
+.platform-link:hover::before {
+    left: 100%;
+}
+
+/* Platform-specific styles */
+.platform-link.linktree {
+    background-color: rgba(57, 224, 155, 0.15);
+    border-color: #39E09B;
+    color: #39E09B;
+}
+
+.platform-link.linktree:hover {
+    background-color: #39E09B;
+    color: #000;
+    transform: translateY(-3px);
+}
+
+.platform-link.youtube {
+    background-color: rgba(255, 0, 0, 0.15);
+    border-color: var(--youtube-color);
+    color: var(--youtube-color);
+}
+
+.platform-link.youtube:hover {
+    background-color: var(--youtube-color);
+    color: #fff;
+    transform: translateY(-3px);
+}
+
+.platform-link.spotify {
+    background-color: rgba(29, 185, 84, 0.15);
+    border-color: var(--spotify-color);
+    color: var(--spotify-color);
+}
+
+.platform-link.spotify:hover {
+    background-color: var(--spotify-color);
+    color: #fff;
+    transform: translateY(-3px);
+}
+
+.platform-link:hover i {
+    transform: scale(1.2);
+}
+
+/* Responsive adjustments for the links section */
+@media (max-width: 768px) {
+    .links {
+        justify-content: center;
+    }
+
+    .platform-link {
+        min-width: 120px;
+        padding: 0.7rem 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .links {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .platform-link {
+        width: 80%;
+        margin-bottom: 0.5rem;
+    }
+}
