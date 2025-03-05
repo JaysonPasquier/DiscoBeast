@@ -130,7 +130,7 @@
                             <div class="cert-icon">
                                 <i class="fas fa-compact-disc"></i>
                             </div>
-                            <div class="cert-info"></div>
+                            <div class="cert-info">
                                 <h4>Disque de Platine</h4>
                                 <div class="cert-progress">
                                     <div class="cert-bar">
@@ -187,30 +187,62 @@
             const milestonePercentage = document.getElementById('milestone-percentage');
 
             const MILESTONE_TARGET = 15000000; // 15 million streams
-
             const GOLD_TARGET = 15000000;
             const PLATINUM_TARGET = 30000000;
 
-            // Track the last YouTube count for comparison
+            // Track the last counts for comparison
             let lastYoutubeCount = 0;
+            let lastSpotifyCount = 0;
 
             fetchCounts();
 
             // Set up refresh button
             refreshBtn.addEventListener('click', function() {
+                // Disable button immediately to prevent spam
+                refreshBtn.disabled = true;
                 refreshBtn.classList.add('spinning');
 
-                // Force refresh the YouTube count
-                fetch('/api/refresh/youtube')
+                // Add loading text to show processing status
+                const originalText = refreshBtn.innerHTML;
+                refreshBtn.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Mise à jour en cours...';
+
+                // Set timeout for minimum loading visual (at least 3 seconds)
+                const startTime = Date.now();
+
+                // Force refresh ALL counts
+                fetch('/api/refresh/all')
                     .then(response => response.json())
                     .then(data => {
-                        console.log('YouTube count refreshed:', data.youtube);
-                        // After refreshing YouTube, get all counts
-                        fetchCounts();
+                        console.log('All counts refreshed:', data);
+
+                        // Calculate elapsed time to ensure minimum loading visual
+                        const elapsedTime = Date.now() - startTime;
+                        const remainingTime = Math.max(0, 3000 - elapsedTime);
+
+                        // Wait for minimum time before updating UI
+                        setTimeout(() => {
+                            // After refreshing, get all counts to update the UI
+                            fetchCounts();
+
+                            // Reset button after a brief delay
+                            setTimeout(() => {
+                                refreshBtn.innerHTML = originalText;
+                                refreshBtn.classList.remove('spinning');
+                                refreshBtn.disabled = false;
+                            }, 600);
+                        }, remainingTime);
                     })
                     .catch(error => {
-                        console.error('Error refreshing YouTube count:', error);
-                        fetchCounts(); // Still try to fetch all counts
+                        console.error('Error refreshing counts:', error);
+
+                        setTimeout(() => {
+                            fetchCounts(); // Still try to fetch all counts
+
+                            // Reset button
+                            refreshBtn.innerHTML = originalText;
+                            refreshBtn.classList.remove('spinning');
+                            refreshBtn.disabled = false;
+                        }, 3000);
                     });
             });
 
@@ -224,9 +256,13 @@
                 fetch('/api/counts')
                     .then(response => response.json())
                     .then(data => {
-                        // Check if YouTube count changed
+                        // Check if counts changed
                         const youtubeChanged = data.youtube !== lastYoutubeCount;
+                        const spotifyChanged = data.spotify !== lastSpotifyCount;
+
+                        // Update our tracking variables
                         lastYoutubeCount = data.youtube;
+                        lastSpotifyCount = data.spotify;
 
                         // Format numbers with thousand separators
                         const spotifyFormatted = new Intl.NumberFormat().format(data.spotify);
@@ -234,7 +270,15 @@
                         const totalFormatted = new Intl.NumberFormat().format(data.total);
 
                         // Update UI with counts
+
+                        // Highlight Spotify count if it changed
                         spotifyCount.textContent = spotifyFormatted;
+                        if (spotifyChanged) {
+                            spotifyCount.classList.add('count-updated');
+                            setTimeout(() => {
+                                spotifyCount.classList.remove('count-updated');
+                            }, 2000);
+                        }
 
                         // Highlight YouTube count if it changed
                         youtubeCount.textContent = youtubeFormatted;
@@ -245,7 +289,14 @@
                             }, 2000);
                         }
 
+                        // Highlight total if either count changed
                         totalCount.textContent = totalFormatted;
+                        if (youtubeChanged || spotifyChanged) {
+                            totalCount.classList.add('count-updated');
+                            setTimeout(() => {
+                                totalCount.classList.remove('count-updated');
+                            }, 2000);
+                        }
 
                         // Update milestone progress
                         updateMilestoneProgress(data.total);
@@ -267,6 +318,7 @@
                     });
             }
 
+            // Rest of your existing functions remain unchanged
             function updateMilestoneProgress(total) {
                 // Original milestone progress update
                 const percentage = Math.min(100, (total / MILESTONE_TARGET) * 100);
@@ -288,7 +340,7 @@
                 updateCertificationProgress(total);
             }
 
-            // Update certification progress bars and counts - updated to remove diamond
+            // Update certification progress bars and counts
             function updateCertificationProgress(total) {
                 // Format the current count for display
                 const formattedTotal = new Intl.NumberFormat('fr-FR').format(total);
@@ -312,14 +364,34 @@
                 }
             }
 
-            // Auto-refresh every 5 minutes
+            // Auto-refresh more frequently
             setInterval(fetchCounts, 2 * 60 * 1000);
         });
     </script>
 
-    <!-- Add this CSS to highlight count changes -->
+    <!-- Updated animation styles for count changes -->
     <style>
         @keyframes countUpdated {
+            0% { background-color: transparent; }
+            50% { background-color: rgba(255, 255, 0, 0.3); }
+            100% { background-color: transparent; }
+        }
+
+        .platform-counter.spotify .count-updated {
+            animation: spotifyUpdated 2s ease-in-out;
+        }
+
+        @keyframes spotifyUpdated {
+            0% { background-color: transparent; }
+            50% { background-color: rgba(30, 215, 96, 0.3); }
+            100% { background-color: transparent; }
+        }
+
+        .platform-counter.youtube .count-updated {
+            animation: youtubeUpdated 2s ease-in-out;
+        }
+
+        @keyframes youtubeUpdated {
             0% { background-color: transparent; }
             50% { background-color: rgba(255, 0, 0, 0.3); }
             100% { background-color: transparent; }
@@ -327,6 +399,13 @@
 
         .count-updated {
             animation: countUpdated 2s ease-in-out;
+        }
+
+        /* Disabled button styles */
+        .refresh-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            background-color: #555;
         }
     </style>
 </body>

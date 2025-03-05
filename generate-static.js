@@ -16,7 +16,7 @@ async function fetchLatestCounts() {
         console.log(`Spotify count: ${spotifyCount}`);
     } catch (error) {
         console.error('Failed to get Spotify count:', error);
-        spotifyCount = 1350186; // Fallback
+        spotifyCount = 1405124; // Fallback
     }
 
     // Get YouTube count

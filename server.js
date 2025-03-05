@@ -1,12 +1,17 @@
 const express = require('express');
 const axios = require('axios');
-const cheerio = require('cheerio');
 const path = require('path');
-const { getSpotifyPlayCount } = require('./spotify-api-official');
 const { getYouTubeViewCount, forceRefreshYouTubeCount, extractVideoId } = require('./youtube-api');
+// Utiliser le scraper Selenium à la place
+const { getSpotifyPlayCount, forceRefreshSpotifyCount } = require('./spotify-selenium');
+// Keep the admin router
+const adminRouter = require('./admin-api');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Add JSON body parsing middleware
+app.use(express.json());
 
 // Track URLs for verified platforms
 const SPOTIFY_TRACK_URL = 'https://open.spotify.com/intl-fr/track/0QSFpVVi5h1TrYG69WMTg7';
@@ -17,6 +22,9 @@ const YOUTUBE_VIDEO_ID = extractVideoId(YOUTUBE_VIDEO_URL);
 
 // Serve static files
 app.use(express.static(path.join(__dirname)));
+
+// Mount the admin routes at /admin
+app.use('/admin', adminRouter);
 
 // API endpoint to get all counts
 app.get('/api/counts', async (req, res) => {
@@ -62,13 +70,50 @@ app.get('/api/refresh/youtube', async (req, res) => {
     }
 });
 
-// Function to get Spotify play count
+// NEW API endpoint to force refresh Spotify count
+app.get('/api/refresh/spotify', async (req, res) => {
+    try {
+        console.log('Force refreshing Spotify count...');
+        const spotifyCount = await forceRefreshSpotifyCount(SPOTIFY_TRACK_URL);
+        res.json({
+            spotify: spotifyCount,
+            message: 'Spotify count refreshed successfully',
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        console.error('Error refreshing Spotify count:', error);
+        res.status(500).json({ error: 'Failed to refresh Spotify count' });
+    }
+});
+
+// NEW API endpoint to refresh both platforms at once
+app.get('/api/refresh/all', async (req, res) => {
+    try {
+        console.log('Force refreshing all counts...');
+        const spotifyCount = await forceRefreshSpotifyCount(SPOTIFY_TRACK_URL);
+        const youtubeCount = await forceRefreshYouTubeCount(YOUTUBE_VIDEO_ID);
+        const totalCount = spotifyCount + youtubeCount;
+
+        res.json({
+            spotify: spotifyCount,
+            youtube: youtubeCount,
+            total: totalCount,
+            message: 'All counts refreshed successfully',
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        console.error('Error refreshing counts:', error);
+        res.status(500).json({ error: 'Failed to refresh counts' });
+    }
+});
+
+// Function to get Spotify play count - updated to use the new scraper
 async function getSpotifyCount() {
     try {
         return await getSpotifyPlayCount(SPOTIFY_TRACK_URL);
     } catch (error) {
-        console.error('Spotify API failed:', error);
-        return 1350186; // Fall back to known count if everything fails
+        console.error('Spotify scraper failed:', error);
+        return 1405124; // Fall back to this count if everything fails
     }
 }
 

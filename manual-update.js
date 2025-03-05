@@ -77,5 +77,5 @@ if (process.argv.length >= 3) {
     console.log('\nTo update the count manually:');
     console.log('  node manual-update.js [new count]');
     console.log('\nExample:');
-    console.log('  node manual-update.js 1350186');
+    console.log('  node manual-update.js 1405124');
 }
